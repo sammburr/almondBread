@@ -1,6 +1,6 @@
 #include "quad.h"
 
-quad::quad()
+Quad::Quad()
 {
     for (unsigned int i = 0; i < 20; i++)
     {
@@ -9,7 +9,7 @@ quad::quad()
     
 }
 
-quad::quad(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
+Quad::Quad(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
 {
 
     vertices[0] = v1.x;
@@ -59,7 +59,7 @@ quad::quad(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
 
 // A Destructor cannot be used, because for some reason it is called when still in scope of engine class...
 // This provides same purpose, need to remeber to call it.
-void quad::Clear()
+void Quad::Clear()
 {
 
     glDeleteVertexArrays(1, &VAO);
@@ -68,7 +68,7 @@ void quad::Clear()
 
 }
 
-void quad::Draw()
+void Quad::Draw()
 {
 
     glBindVertexArray(VAO);

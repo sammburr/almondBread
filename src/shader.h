@@ -1,3 +1,5 @@
+// Shader class is built entirely from template besides functions specified*
+
 #ifndef __SHADER__
 #define __SHADER__
 
@@ -21,7 +23,12 @@ public:
     // Sets the vertex shader of this program.
     bool setVertexShader(std::string a_vertexShaderSource);
     bool setFragmentShader(std::string a_fragmentShaderSource);
+
+    // *Custom function not from template
     void setInt(const char* a_uninformName, int a_int);
+    // *Custom function not from template
+    void setVec2(const char* a_uninformName, float a_float, float b_float);
+
     int compile();
     void use();
 

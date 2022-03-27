@@ -7,7 +7,7 @@
 #include <iostream>
 #include <Windows.h>
 
-class quad
+class Quad
 {
 private:
     unsigned int VBO, VAO, EBO;
@@ -23,8 +23,8 @@ private:
     };
 
 public:
-    quad(glm::vec3, glm::vec3, glm::vec3, glm::vec3);
-    quad();
+    Quad(glm::vec3, glm::vec3, glm::vec3, glm::vec3);
+    Quad();
 
     void Clear();
     void Draw();

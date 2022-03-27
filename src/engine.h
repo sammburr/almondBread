@@ -14,6 +14,7 @@
 #include "quad.h"
 #include "shader.h"
 #include "texture.h"
+#include "frameBuffer.h"
 
 class engine
 {
@@ -50,9 +51,17 @@ private:
 
     /*  DEFINE GLOBAL CLASS VARS HERE */
 
-    quad Square;
-    Shader shader;
+    glm::vec2 renderSize;
+
+    Quad Square0; 
+    Quad Square1;
+
+    Shader shader0;
+    Shader shader1;
+
     Texture tex;
+
+    FrameBuffer frameBuffer;
 
 
     /*                                */

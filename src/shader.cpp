@@ -50,6 +50,13 @@ void Shader::setInt(const char* a_uninformName, int a_int)
 
 }
 
+void Shader::setVec2(const char* a_uninformName, float a_float, float b_float)
+{
+
+    glUniform2f(glGetUniformLocation(shaderProgram, a_uninformName), a_float, b_float);
+
+}
+
 int Shader::compile()
 {
     this->shaderProgram = glCreateProgram();

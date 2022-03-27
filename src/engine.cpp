@@ -173,19 +173,24 @@ void engine::ProcessBeginWindow()
 void engine::ProcessBegin()
 {
 
-    //shader.setFragmentShader("C:/Users/Sam Burford/Desktop/Almond Bread/src/shaders/basicFragmentShader.glsl");
-    shader.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicMandelFragmentShader.glsl").string());
-    shader.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
-    shader.compile();
+    shader0.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicFragmentShader.glsl").string());
+    shader1.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicMandelFragmentShader.glsl").string());
+    shader0.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
+    shader1.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
+    shader0.compile();
+    shader1.compile();
 
     glm::vec3 v1 = glm::vec3( 1.0f,  1.0f,  0.0f);
     glm::vec3 v2 = glm::vec3( 1.0f, -1.0f,  0.0f);
     glm::vec3 v3 = glm::vec3(-1.0f, -1.0f,  0.0f);
     glm::vec3 v4 = glm::vec3(-1.0f,  1.0f,  0.0f);
 
-    Square = quad(v1, v2, v3, v4);
-    
-    //tex.genTexture("C:\\Users\\Sam Burford\\Desktop\\Almond Bread\\src\\container.jpg");
+    Square0 = Quad(v1, v2, v3, v4);
+    Square1 = Quad(v1, v2, v3, v4);
+
+    renderSize = glm::vec2(800,800);
+
+    frameBuffer.Generate();
 
 }
 
@@ -199,16 +204,31 @@ void engine::ProcessInput()
 void engine::ProcessUpdate()
 {
 
-
+    renderSize.x = (renderSize.x < 800) ? renderSize.x + 1 : 1;
+    renderSize.y = (renderSize.y < 800) ? renderSize.y + 1 : 1;
 
 }
 
 void engine::ProcessDraw()
 {
 
-    shader.use();
-    //shader.setInt("texture0", 0);
-    Square.Draw();   
+    frameBuffer.Bind();
+    glViewport(0, 0, renderSize.x, renderSize.y);
+
+    tex.genTexture(renderSize.x, renderSize.y);
+    frameBuffer.AttachTexture(tex.getID());
+
+    shader1.use();
+    shader1.setVec2("screenSize", renderSize.x, renderSize.y);
+    Square1.Draw();   
+
+    frameBuffer.UnBind();
+    glViewport(0, 0, 800, 800);
+
+    shader0.use();
+    shader0.setInt("texture0", 0);
+    Square0.Draw();
+
 
 }
 
@@ -216,6 +236,7 @@ void engine::ProcessEnd()
 {
 
     tex.freeTexture();
-    Square.Clear();
+    Square0.Clear();
+    Square1.Clear();
 
 }

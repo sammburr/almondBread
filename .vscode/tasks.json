@@ -40,7 +40,8 @@
                     "${workspaceRoot}/src/shader.cpp",
                     "${workspaceRoot}/src/engine.cpp",
                     "${workspaceRoot}/src/quad.cpp",
-                    "${workspaceRoot}/src/texture.cpp",                
+                    "${workspaceRoot}/src/texture.cpp",   
+                    "${workspaceRoot}/src/frameBuffer.cpp",             
                     
                     "-g",
                     "--std=c++17",
