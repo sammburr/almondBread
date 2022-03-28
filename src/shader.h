@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <GLM/glm.hpp>
 #include <iostream>
 
 // Creates a new shader program.
@@ -27,7 +28,9 @@ public:
     // *Custom function not from template
     void setInt(const char* a_uninformName, int a_int);
     // *Custom function not from template
-    void setVec2(const char* a_uninformName, float a_float, float b_float);
+    void setVec2(const char* a_uninformName, glm::vec2 a_vec2);
+    // *Custom function not from template
+    void setFloat(const char* a_uninformName, float a_float);
 
     int compile();
     void use();

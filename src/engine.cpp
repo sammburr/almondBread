@@ -188,24 +188,120 @@ void engine::ProcessBegin()
     Square0 = Quad(v1, v2, v3, v4);
     Square1 = Quad(v1, v2, v3, v4);
 
-    renderSize = glm::vec2(800,800);
+    renderSize = glm::vec2(800.0f,800.0f);
+    displacment = glm::vec2(0.5f, 0.5f);
+    scale = 10.0f;
+    juliaPoint = glm::vec2(0.0f, 0.0f);
+    maxIter = 10.0f;
 
     frameBuffer.Generate();
+    frameBuffer.Bind();
+    tex.genTexture(renderSize.x, renderSize.y);
+    frameBuffer.AttachTexture(tex.getID());
+    frameBuffer.UnBind();
 
 }
 
 void engine::ProcessInput()
 {
 
+    if(glfwGetKey(window, GLFW_KEY_KP_8) == GLFW_PRESS)
+    {
 
+        renderSize = renderSize + 5.0f;
+
+    }
+    else if(glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS)
+    {
+
+        renderSize = renderSize - 5.0f;
+
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+
+        displacment.y = displacment.y + 0.01f;
+
+    }
+    else if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+
+        displacment.y = displacment.y - 0.01f;
+
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+
+        displacment.x = displacment.x + 0.01f;
+
+    }
+    else if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+
+        displacment.x = displacment.x - 0.01f;
+
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
+    {
+
+        scale = scale + 0.01f;
+
+    }
+    else if(glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
+    {
+
+        scale = scale - 0.01f;
+
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+
+        juliaPoint.y = juliaPoint.y + 0.01f;
+
+    }
+    else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+
+        juliaPoint.y = juliaPoint.y - 0.01f;
+
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+
+        juliaPoint.x = juliaPoint.x + 0.01f;
+
+    }
+    else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+
+        juliaPoint.x = juliaPoint.x - 0.01f;
+
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+    {
+
+        maxIter = maxIter + 10.0f;
+
+    }
+    else if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+    {
+
+        maxIter = maxIter - 10.0f;
+
+    }
 
 }
 
 void engine::ProcessUpdate()
 {
 
-    renderSize.x = (renderSize.x < 800) ? renderSize.x + 1 : 1;
-    renderSize.y = (renderSize.y < 800) ? renderSize.y + 1 : 1;
+
 
 }
 
@@ -213,13 +309,16 @@ void engine::ProcessDraw()
 {
 
     frameBuffer.Bind();
+    //tex.updateTexture(renderSize.x, renderSize.y);
+    //frameBuffer.AttachTexture(tex.getID());
     glViewport(0, 0, renderSize.x, renderSize.y);
 
-    tex.genTexture(renderSize.x, renderSize.y);
-    frameBuffer.AttachTexture(tex.getID());
-
     shader1.use();
-    shader1.setVec2("screenSize", renderSize.x, renderSize.y);
+    shader1.setVec2("screenSize", renderSize);
+    shader1.setFloat("scale", scale);
+    shader1.setVec2("displacment", displacment);
+    shader1.setVec2("juliaPoint", juliaPoint);
+    shader1.setFloat("MAX_ITERS", maxIter);
     Square1.Draw();   
 
     frameBuffer.UnBind();
@@ -228,7 +327,6 @@ void engine::ProcessDraw()
     shader0.use();
     shader0.setInt("texture0", 0);
     Square0.Draw();
-
 
 }
 

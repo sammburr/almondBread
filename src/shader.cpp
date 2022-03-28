@@ -43,17 +43,24 @@ bool Shader::setFragmentShader(std::string a_pathToShaderSourceFile)
     return true;
 }
 
-void Shader::setInt(const char* a_uninformName, int a_int)
+void Shader::setInt(const char* a_uniformName, int a_int)
 {
 
-    glUniform1i(glGetUniformLocation(shaderProgram, a_uninformName), a_int);
+    glUniform1i(glGetUniformLocation(shaderProgram, a_uniformName), a_int);
 
 }
 
-void Shader::setVec2(const char* a_uninformName, float a_float, float b_float)
+void Shader::setFloat(const char* a_uniformName, float a_float)
 {
 
-    glUniform2f(glGetUniformLocation(shaderProgram, a_uninformName), a_float, b_float);
+    glUniform1f(glGetUniformLocation(shaderProgram, a_uniformName), a_float);
+
+}
+
+void Shader::setVec2(const char* a_uninformName, glm::vec2 a_vec2)
+{
+
+    glUniform2f(glGetUniformLocation(shaderProgram, a_uninformName), a_vec2.x, a_vec2.y);
 
 }
 

@@ -52,6 +52,10 @@ private:
     /*  DEFINE GLOBAL CLASS VARS HERE */
 
     glm::vec2 renderSize;
+    float scale;
+    glm::vec2 displacment;
+    glm::vec2 juliaPoint;
+    float maxIter;
 
     Quad Square0; 
     Quad Square1;

@@ -2,13 +2,15 @@
 layout(location = 0) out vec3 color;
 
 uniform vec2 screenSize;
-
-float MAX_ITERS = 300.0;
+uniform float scale;
+uniform vec2 displacment;
+uniform vec2 juliaPoint;
+uniform float MAX_ITERS;
 
 void main()
 {   
 
-    vec2 c = gl_FragCoord.xy/screenSize.xy;
+    vec2 c = gl_FragCoord.xy/(screenSize.xy/scale)- (displacment * scale);
 
     float iterations = 0.0;
     
@@ -17,12 +19,12 @@ void main()
 
     float x2,y2;
 
-    // x = c.x;
-    // y = c.y;
-    // x2 = c.x * c.x;
-    // y2 = c.y * c.y;
+    x = c.x;
+    y = c.y;
+    x2 = c.x * c.x;
+    y2 = c.y * c.y;
 
-    // c = vec2(-0.25, 0.0);
+    c = juliaPoint;
 
     while (iterations <= MAX_ITERS && x2 + y2 <= 4.0)
     {
