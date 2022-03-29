@@ -75,15 +75,16 @@ void Texture::genTexture(const char* a_pathToImage)
 void Texture::genTexture(unsigned int a_width, unsigned int a_height)
 {
 
-    //texture_data = new GLubyte[a_width*a_height]();
+    texture_data = new GLubyte[a_width*a_height*3]();
 
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, a_width, a_height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, a_width, a_height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 
 }
 
@@ -92,7 +93,7 @@ void Texture::updateTexture(unsigned int a_width, unsigned int a_height)
 
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexSubImage2D(GL_TEXTURE_2D, 0, GL_RGB, a_width, a_height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, a_width, a_height, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
 
 }
 

@@ -46,10 +46,26 @@ private:
 
     HANDLE hConsole;
     GLFWwindow* window;
+    glm::ivec2 windowSize;
 
     #pragma endregion
 
     /*  DEFINE GLOBAL CLASS VARS HERE */
+
+    glm::vec3 f1 = glm::vec3( 1.0f,  1.0f,  0.0f);
+    glm::vec3 f2 = glm::vec3( 1.0f, -1.0f,  0.0f);
+    glm::vec3 f3 = glm::vec3(-1.0f, -1.0f,  0.0f);
+    glm::vec3 f4 = glm::vec3(-1.0f,  1.0f,  0.0f);
+
+    glm::vec3 q1v1 = glm::vec3( 1.0f,  1.0f,  0.0f);
+    glm::vec3 q1v2 = glm::vec3( 1.0f,  0.0f,  0.0f);
+    glm::vec3 q1v3 = glm::vec3( 0.0f,  0.0f,  0.0f);
+    glm::vec3 q1v4 = glm::vec3( 0.0f,  1.0f,  0.0f);
+
+    glm::vec3 q2v1 = glm::vec3( -1.0f,  1.0f,  0.0f);
+    glm::vec3 q2v2 = glm::vec3( -1.0f,  0.0f,  0.0f);
+    glm::vec3 q2v3 = glm::vec3( 0.0f,  0.0f,  0.0f);
+    glm::vec3 q2v4 = glm::vec3( 0.0f,  1.0f,  0.0f);
 
     glm::vec2 renderSize;
     float scale;
@@ -57,11 +73,14 @@ private:
     glm::vec2 juliaPoint;
     float maxIter;
 
-    Quad Square0; 
-    Quad Square1;
+    Quad SquareScreen1; 
+    Quad SquareScreen2;
+    Quad SquareFract1;
+    Quad SquareFract2;
 
     Shader shader0;
-    Shader shader1;
+    Shader shaderJulia;
+    Shader shaderMandel;
 
     Texture tex;
 

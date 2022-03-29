@@ -150,6 +150,8 @@ void engine::ProcessBeginWindow()
     while(!glfwWindowShouldClose(window))
     {
 
+        glfwGetWindowSize(window, &windowSize.x, &windowSize.y);
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -174,19 +176,19 @@ void engine::ProcessBegin()
 {
 
     shader0.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicFragmentShader.glsl").string());
-    shader1.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicMandelFragmentShader.glsl").string());
+    shaderMandel.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicMandelFragmentShader.glsl").string());
+    shaderJulia.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicJuliaFragmentShader.glsl").string());
     shader0.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
-    shader1.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
+    shaderMandel.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
+    shaderJulia.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
     shader0.compile();
-    shader1.compile();
+    shaderMandel.compile();
+    shaderJulia.compile();
 
-    glm::vec3 v1 = glm::vec3( 1.0f,  1.0f,  0.0f);
-    glm::vec3 v2 = glm::vec3( 1.0f, -1.0f,  0.0f);
-    glm::vec3 v3 = glm::vec3(-1.0f, -1.0f,  0.0f);
-    glm::vec3 v4 = glm::vec3(-1.0f,  1.0f,  0.0f);
-
-    Square0 = Quad(v1, v2, v3, v4);
-    Square1 = Quad(v1, v2, v3, v4);
+    SquareScreen1 = Quad(q1v1, q1v2, q1v3, q1v4, 1.0f, 1.0f);
+    SquareScreen2 = Quad(q2v1, q2v2, q2v3, q2v4, 1.0f, 1.0f);
+    SquareFract1 = Quad(f1, f2, f3, f4, 1.0f, 1.0f);
+    SquareFract2 = Quad(f1, f2, f3, f4, 1.0f, 1.0f);
 
     renderSize = glm::vec2(800.0f,800.0f);
     displacment = glm::vec2(0.5f, 0.5f);
@@ -209,12 +211,21 @@ void engine::ProcessInput()
     {
 
         renderSize = renderSize + 5.0f;
+        SquareScreen1.Clear();
+        SquareScreen2.Clear();
+        SquareScreen1 = Quad(q1v1, q1v2, q1v3, q1v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
+        SquareScreen2 = Quad(q2v1, q2v2, q2v3, q2v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
+
 
     }
     else if(glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS)
     {
 
         renderSize = renderSize - 5.0f;
+        SquareScreen1.Clear();
+        SquareScreen2.Clear();
+        SquareScreen1 = Quad(q1v1, q1v2, q1v3, q1v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
+        SquareScreen2 = Quad(q2v1, q2v2, q2v3, q2v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
 
     }
 
@@ -309,24 +320,44 @@ void engine::ProcessDraw()
 {
 
     frameBuffer.Bind();
-    //tex.updateTexture(renderSize.x, renderSize.y);
-    //frameBuffer.AttachTexture(tex.getID());
+    tex.updateTexture(renderSize.x, renderSize.y);
+    frameBuffer.AttachTexture(tex.getID());
+
     glViewport(0, 0, renderSize.x, renderSize.y);
 
-    shader1.use();
-    shader1.setVec2("screenSize", renderSize);
-    shader1.setFloat("scale", scale);
-    shader1.setVec2("displacment", displacment);
-    shader1.setVec2("juliaPoint", juliaPoint);
-    shader1.setFloat("MAX_ITERS", maxIter);
-    Square1.Draw();   
+    shaderJulia.use();
+    shaderJulia.setVec2("screenSize", renderSize);
+    shaderJulia.setFloat("scale", scale);
+    shaderJulia.setVec2("displacment", displacment);
+    shaderJulia.setVec2("juliaPoint", juliaPoint);
+    shaderJulia.setFloat("MAX_ITERS", maxIter);
+    SquareFract1.Draw();
 
     frameBuffer.UnBind();
-    glViewport(0, 0, 800, 800);
-
+    glViewport(0, 0, windowSize.x, windowSize.y);
     shader0.use();
     shader0.setInt("texture0", 0);
-    Square0.Draw();
+    SquareScreen1.Draw();
+
+    frameBuffer.Bind();
+    glViewport(0, 0, renderSize.x, renderSize.y);
+
+    tex.updateTexture(renderSize.x, renderSize.y);
+    frameBuffer.AttachTexture(tex.getID());
+
+    shaderMandel.use();
+    shaderMandel.setVec2("screenSize", renderSize);
+    shaderMandel.setFloat("scale", scale);
+    shaderMandel.setVec2("displacment", displacment);
+    shaderJulia.setVec2("juliaPoint", juliaPoint);
+    shaderMandel.setFloat("MAX_ITERS", maxIter);
+    SquareFract2.Draw();  
+
+    frameBuffer.UnBind();
+    glViewport(0, 0, windowSize.x, windowSize.y);
+    shader0.use();
+    shader0.setInt("texture0", 0);
+    SquareScreen2.Draw();
 
 }
 
@@ -334,7 +365,9 @@ void engine::ProcessEnd()
 {
 
     tex.freeTexture();
-    Square0.Clear();
-    Square1.Clear();
+    SquareFract1.Clear();
+    SquareFract2.Clear();
+    SquareScreen1.Clear();
+    SquareScreen2.Clear();
 
 }

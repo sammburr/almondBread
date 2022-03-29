@@ -9,19 +9,19 @@ Quad::Quad()
     
 }
 
-Quad::Quad(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
+Quad::Quad(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4, float tiling_x, float tiling_y)
 {
 
     vertices[0] = v1.x;
     vertices[1] = v1.y;
     vertices[2] = v1.z;
-    vertices[3] = 1.0f;
-    vertices[4] = 1.0f;
+    vertices[3] = 1.0f*tiling_x;
+    vertices[4] = 1.0f*tiling_y;
 
     vertices[5] = v2.x;
     vertices[6] = v2.y;
     vertices[7] = v2.z;
-    vertices[8] = 1.0f;
+    vertices[8] = 1.0f*tiling_x;
     vertices[9] = 0.0f;
 
     vertices[10] = v3.x;
@@ -34,7 +34,7 @@ Quad::Quad(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
     vertices[16] = v4.y;
     vertices[17] = v4.z;
     vertices[18] = 0.0f;
-    vertices[19] = 1.0f;
+    vertices[19] = 1.0f*tiling_y;
 
     glGenVertexArrays(1, &VAO);
 

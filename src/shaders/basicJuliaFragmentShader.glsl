@@ -19,6 +19,13 @@ void main()
 
     float x2,y2;
 
+    x = c.x;
+    y = c.y;
+    x2 = c.x * c.x;
+    y2 = c.y * c.y;
+
+    c = juliaPoint;
+
     while (iterations <= MAX_ITERS && x2 + y2 <= 4.0)
     {
 
@@ -31,13 +38,6 @@ void main()
 
     }
 
-    if(juliaPoint.x + ( 0.01 * scale ) >= c.x && juliaPoint.y + ( 0.01 * scale ) >= c.y && juliaPoint.x - ( 0.01 * scale ) <= c.x && juliaPoint.y - ( 0.01 * scale ) <= c.y)
-    {
-        color = vec3(1.0, 0.0, 0.0);
-    }   
-    else
-    {
-        color = vec3(iterations/MAX_ITERS, 1.0, 1.0);
-    }
+    color = vec3(iterations/MAX_ITERS, 0.5, 1.0);
 
 };

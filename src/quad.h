@@ -23,7 +23,7 @@ private:
     };
 
 public:
-    Quad(glm::vec3, glm::vec3, glm::vec3, glm::vec3);
+    Quad(glm::vec3, glm::vec3, glm::vec3, glm::vec3, float, float);
     Quad();
 
     void Clear();
