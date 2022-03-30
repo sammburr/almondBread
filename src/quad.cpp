@@ -12,6 +12,11 @@ Quad::Quad()
 Quad::Quad(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4, float tiling_x, float tiling_y)
 {
 
+    a = v1;
+    b = v2;
+    c = v3;
+    d = v4;
+
     vertices[0] = v1.x;
     vertices[1] = v1.y;
     vertices[2] = v1.z;

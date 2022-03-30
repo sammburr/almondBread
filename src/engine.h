@@ -57,15 +57,15 @@ private:
     glm::vec3 f3 = glm::vec3(-1.0f, -1.0f,  0.0f);
     glm::vec3 f4 = glm::vec3(-1.0f,  1.0f,  0.0f);
 
-    glm::vec3 q1v1 = glm::vec3( 1.0f,  1.0f,  0.0f);
-    glm::vec3 q1v2 = glm::vec3( 1.0f,  0.0f,  0.0f);
+    glm::vec3 q1v1 = glm::vec3( -1.0f,  1.0f,  0.0f);
+    glm::vec3 q1v2 = glm::vec3( -1.0f,  0.0f,  0.0f);
     glm::vec3 q1v3 = glm::vec3( 0.0f,  0.0f,  0.0f);
     glm::vec3 q1v4 = glm::vec3( 0.0f,  1.0f,  0.0f);
 
-    glm::vec3 q2v1 = glm::vec3( -1.0f,  1.0f,  0.0f);
-    glm::vec3 q2v2 = glm::vec3( -1.0f,  0.0f,  0.0f);
-    glm::vec3 q2v3 = glm::vec3( 0.0f,  0.0f,  0.0f);
-    glm::vec3 q2v4 = glm::vec3( 0.0f,  1.0f,  0.0f);
+    glm::vec3 q2v1 = q1v1 + glm::vec3(1.0f,0.0f,0.0f);
+    glm::vec3 q2v2 = q1v2 + glm::vec3(1.0f,0.0f,0.0f);
+    glm::vec3 q2v3 = q1v3 + glm::vec3(1.0f,0.0f,0.0f);
+    glm::vec3 q2v4 = q1v4 + glm::vec3(1.0f,0.0f,0.0f);
 
     glm::vec2 renderSize;
     float scale;

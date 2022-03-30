@@ -210,22 +210,13 @@ void engine::ProcessInput()
     if(glfwGetKey(window, GLFW_KEY_KP_8) == GLFW_PRESS)
     {
 
-        renderSize = renderSize + 5.0f;
-        SquareScreen1.Clear();
-        SquareScreen2.Clear();
-        SquareScreen1 = Quad(q1v1, q1v2, q1v3, q1v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
-        SquareScreen2 = Quad(q2v1, q2v2, q2v3, q2v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
-
+        renderSize = (  renderSize.x >= windowSize.x + 5.0f || renderSize.y >= windowSize.y + 5.0f) ? (glm::vec2)windowSize : renderSize + 5.0f ;
 
     }
     else if(glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS)
     {
 
-        renderSize = renderSize - 5.0f;
-        SquareScreen1.Clear();
-        SquareScreen2.Clear();
-        SquareScreen1 = Quad(q1v1, q1v2, q1v3, q1v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
-        SquareScreen2 = Quad(q2v1, q2v2, q2v3, q2v4, renderSize.x/windowSize.x, renderSize.y/windowSize.y);
+        renderSize = (  renderSize.x <= 21.0f|| renderSize.y <= 21.0f) ? glm::vec2(16.0f) : renderSize - 5.0f;
 
     }
 
@@ -318,6 +309,16 @@ void engine::ProcessUpdate()
 
 void engine::ProcessDraw()
 {
+
+    SquareScreen1.Clear();
+    SquareScreen2.Clear();
+    if(windowSize.x >= windowSize.y)
+    {
+
+        SquareScreen1 = Quad(q1v1, q1v2, glm::vec3(1.0f - (windowSize.x / windowSize.y), 0.0f, 0.0f), glm::vec3(1.0f - (windowSize.x / windowSize.y), 1.0f, 0.0f), renderSize.x/windowSize.x, renderSize.y/windowSize.y);
+        SquareScreen2 = Quad(SquareScreen1.a + glm::vec3(1.0f, 0.0f, 0.0f), SquareScreen1.b  + glm::vec3(1.0f, 0.0f, 0.0f), SquareScreen1.c  + glm::vec3(1.0f, 0.0f, 0.0f), SquareScreen1.d  + glm::vec3(1.0f, 0.0f, 0.0f), renderSize.x/windowSize.x, renderSize.y/windowSize.y);
+
+    }
 
     frameBuffer.Bind();
     tex.updateTexture(renderSize.x, renderSize.y);
