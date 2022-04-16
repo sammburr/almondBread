@@ -11,10 +11,13 @@
 #include <thread>
 #include <filesystem>
 
+#include "screen.h"
+
 #include "quad.h"
 #include "shader.h"
 #include "texture.h"
 #include "frameBuffer.h"
+#include "console.h"
 
 class engine
 {
@@ -22,8 +25,6 @@ private:
 
     #pragma region BACKEND
 
-    // Set up windows console for colouring and UTF-8 encoding
-    void InitConsole();
     // Startup and check GLFW
     bool InitGLFW();
     // Startup and check GLAD
@@ -44,50 +45,12 @@ private:
     // Terminate and clear memory here.
     void ProcessEnd();
 
-    HANDLE hConsole;
+    Console console = Console("engine.cpp");
     GLFWwindow* window;
     glm::ivec2 windowSize;
 
     #pragma endregion
 
-    /*  DEFINE GLOBAL CLASS VARS HERE */
-
-    glm::vec3 f1 = glm::vec3( 1.0f,  1.0f,  0.0f);
-    glm::vec3 f2 = glm::vec3( 1.0f, -1.0f,  0.0f);
-    glm::vec3 f3 = glm::vec3(-1.0f, -1.0f,  0.0f);
-    glm::vec3 f4 = glm::vec3(-1.0f,  1.0f,  0.0f);
-
-    glm::vec3 q1v1 = glm::vec3( -1.0f,  1.0f,  0.0f);
-    glm::vec3 q1v2 = glm::vec3( -1.0f,  0.0f,  0.0f);
-    glm::vec3 q1v3 = glm::vec3( 0.0f,  0.0f,  0.0f);
-    glm::vec3 q1v4 = glm::vec3( 0.0f,  1.0f,  0.0f);
-
-    glm::vec3 q2v1 = q1v1 + glm::vec3(1.0f,0.0f,0.0f);
-    glm::vec3 q2v2 = q1v2 + glm::vec3(1.0f,0.0f,0.0f);
-    glm::vec3 q2v3 = q1v3 + glm::vec3(1.0f,0.0f,0.0f);
-    glm::vec3 q2v4 = q1v4 + glm::vec3(1.0f,0.0f,0.0f);
-
-    glm::vec2 renderSize;
-    float scale;
-    glm::vec2 displacment;
-    glm::vec2 juliaPoint;
-    float maxIter;
-
-    Quad SquareScreen1; 
-    Quad SquareScreen2;
-    Quad SquareFract1;
-    Quad SquareFract2;
-
-    Shader shader0;
-    Shader shaderJulia;
-    Shader shaderMandel;
-
-    Texture tex;
-
-    FrameBuffer frameBuffer;
-
-
-    /*                                */
 
 public:
 
@@ -97,8 +60,6 @@ public:
     int SCR_WIDTH;
     int SCR_HEIGHT;
     const char* SCR_TITLE;
-
-    double FrameRate = 999;
 
 };
 

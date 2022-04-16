@@ -57,10 +57,24 @@ void Shader::setFloat(const char* a_uniformName, float a_float)
 
 }
 
+void Shader::setDouble(const char* a_uniformName, double a_double)
+{
+
+    glUniform1d(glGetUniformLocation(shaderProgram, a_uniformName), a_double);
+
+}
+
 void Shader::setVec2(const char* a_uninformName, glm::vec2 a_vec2)
 {
 
     glUniform2f(glGetUniformLocation(shaderProgram, a_uninformName), a_vec2.x, a_vec2.y);
+
+}
+
+void Shader::setVec2d(const char* a_uninformName, glm::dvec2 a_vec2d)
+{
+
+    glUniform2f(glGetUniformLocation(shaderProgram, a_uninformName), a_vec2d.x, a_vec2d.y);
 
 }
 
@@ -84,10 +98,13 @@ int Shader::compile()
     if(!compiled)
     {
         glGetShaderInfoLog(this->shaderProgram, 512, NULL, infoLog);
-        std::cerr << "ERROR: Could not compile shader program: " << infoLog << std::endl; 
+        console.LogError("Could not complie shader program:");
+        console.LogError(infoLog);
     
         return -1;
     }
+
+    //console.LogSuccsess("Complied shader program");
 
     // Delete the shaders.
     glDeleteShader(this->vertexShaderID);
@@ -116,6 +133,7 @@ std::string Shader::loadShaderSource(std::string a_pathToShaderSourceFile)
     // Make sure to check that the file is open.
     if(fileReader.is_open())
     {
+        //console.LogSuccsess("Opened file.");
         // Set the 'cursor' at the beginning of the file.
         fileReader.seekg(0, std::ios::beg);
 
@@ -134,7 +152,7 @@ std::string Shader::loadShaderSource(std::string a_pathToShaderSourceFile)
     }
     else
     {
-        std::cerr << "Could not open file." << std::endl;
+        console.LogError("Could not open file.");
     }
 
     return "";
@@ -151,10 +169,13 @@ bool Shader::shaderCompiled(unsigned int a_id)
     if(!compiled)
     {
         glGetShaderInfoLog(a_id, 512, NULL, infoLog);
-        std::cerr << "ERROR: Could not compile shader: " << infoLog << std::endl; 
+        console.LogError("Could not compile shader:");
+        console.LogError(infoLog);
     
         return false;
     }
+
+    //console.LogSuccsess("Compiled shader");
 
     return true;
 }

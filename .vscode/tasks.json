@@ -41,7 +41,9 @@
                     "${workspaceRoot}/src/engine.cpp",
                     "${workspaceRoot}/src/quad.cpp",
                     "${workspaceRoot}/src/texture.cpp",   
-                    "${workspaceRoot}/src/frameBuffer.cpp",             
+                    "${workspaceRoot}/src/frameBuffer.cpp",      
+                    "${workspaceRoot}/src/screen.cpp",
+                    "${workspaceRoot}/src/console.cpp",       
                     
                     "-g",
                     "--std=c++17",

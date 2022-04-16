@@ -1,10 +1,5 @@
 #include "engine.h"
 
-#pragma execution_character_set( "utf-8" )
-
-#define RED   71
-#define GREEN 47
-
 #pragma region BACKEND
 
 engine::engine(int scr_width, int scr_height, const char* title)
@@ -13,8 +8,6 @@ engine::engine(int scr_width, int scr_height, const char* title)
     SCR_HEIGHT = scr_height;
     SCR_WIDTH  = scr_width;
     SCR_TITLE  = title;
-
-    InitConsole();
 
     if(!InitGLFW())
     {
@@ -38,19 +31,7 @@ engine::~engine()
 
     glfwTerminate();
 
-    SetConsoleTextAttribute(hConsole, GREEN);
-    std::cout << "(α) GLFW => terminated." << std::endl;
-    SetConsoleTextAttribute(hConsole, 7);
-
-}
-
-void engine::InitConsole()
-{
-
-    SetConsoleOutputCP( CP_UTF8 );
-    setvbuf(stdout, nullptr, _IOFBF, 1000);
-
-    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    console.LogSuccsess("GLFW => terminated.");
 
 }
 
@@ -61,23 +42,18 @@ bool engine::InitGLFW()
     {
 
         //glfw is init correctly
-        SetConsoleTextAttribute(hConsole, GREEN);
-        std::cout << "(α) GLFW => initialized." << std::endl;
-        SetConsoleTextAttribute(hConsole, 7);
+        console.LogSuccsess("GLFW => initialized.");
 
     }
     else
     {
 
         //glfw has failed to init
-        SetConsoleTextAttribute(hConsole, RED);
-        std::cout << "(β) GLFW => failed to initialized." << std::endl;
-        SetConsoleTextAttribute(hConsole, 7);
+        console.LogError("GLFW => failed to initialized.");
 
         return false;
 
     }
-
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -93,9 +69,7 @@ bool engine::InitGlad()
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
 
-        SetConsoleTextAttribute(hConsole, RED);
-        std::cout << "(β) glad => failed to load OpenGL function pointers." << std::endl;
-        SetConsoleTextAttribute(hConsole, 7);
+        console.LogError("glad => failed to load OpenGL function pointers.");
 
         return false;       
 
@@ -103,9 +77,7 @@ bool engine::InitGlad()
     else
     {
 
-        SetConsoleTextAttribute(hConsole, GREEN);
-        std::cout << "(α) glad => loaded OpenGL function pointers." << std::endl;
-        SetConsoleTextAttribute(hConsole, 7);
+        console.LogSuccsess("glad => loaded OpenGL function pointers.");
 
     }
 
@@ -121,9 +93,7 @@ bool engine::StartWindow()
     if (window == NULL)
     {
 
-        SetConsoleTextAttribute(hConsole, RED);
-        std::cout << "(β) GLFW => failed to create GLFWWindow context." << std::endl;
-        SetConsoleTextAttribute(hConsole, 7);
+        console.LogError("GLFW => failed to create GLFWWindow context.");
 
         return false;
 
@@ -131,9 +101,7 @@ bool engine::StartWindow()
     else
     {
 
-        SetConsoleTextAttribute(hConsole, GREEN);
-        std::cout << "(α) GLFW => succsefully created GLFWWindow context." << std::endl;
-        SetConsoleTextAttribute(hConsole, 7);
+        console.LogSuccsess("GLFW => succsefully created GLFWWindow context.");
 
     }
 
@@ -151,9 +119,8 @@ void engine::ProcessBeginWindow()
     {
 
         glfwGetWindowSize(window, &windowSize.x, &windowSize.y);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        SCR_WIDTH = windowSize.x;
+        SCR_HEIGHT = windowSize.y;
 
         ProcessInput();
 
@@ -161,7 +128,6 @@ void engine::ProcessBeginWindow()
 
         ProcessDraw();    
 
-        glfwSwapBuffers(window);
         glfwPollEvents();
 
     }
@@ -172,23 +138,66 @@ void engine::ProcessBeginWindow()
 
 #pragma endregion
 
+#pragma region GLOBALS
+
+/*  DEFINE GLOBAL CLASS VARS HERE */
+
+glm::vec3 f1 = glm::vec3( 1.0f,  1.0f,  0.0f);  // TL
+glm::vec3 f2 = glm::vec3( 1.0f, -1.0f,  0.0f);  // BL
+glm::vec3 f3 = glm::vec3(-1.0f, -1.0f,  0.0f);  // BR
+glm::vec3 f4 = glm::vec3(-1.0f,  1.0f,  0.0f);  // TR
+
+glm::vec3 q1v1 = glm::vec3( -1.0f,  1.0f,  0.0f); // TL
+glm::vec3 q1v2 = glm::vec3( -1.0f,  0.0f,  0.0f); // BL
+glm::vec3 q1v3 = glm::vec3( 0.0f,  0.0f,  0.0f); // BR
+glm::vec3 q1v4 = glm::vec3( 0.0f,  1.0f,  0.0f); // TR
+
+glm::vec3 q2v1 = q1v1 + glm::vec3(1.0f,0.0f,0.0f);
+glm::vec3 q2v2 = q1v2 + glm::vec3(1.0f,0.0f,0.0f);
+glm::vec3 q2v3 = q1v3 + glm::vec3(1.0f,0.0f,0.0f);
+glm::vec3 q2v4 = q1v4 + glm::vec3(1.0f,0.0f,0.0f);
+
+glm::vec2 renderSize;
+bool hasUpdated = false;
+
+float scale;
+glm::vec2 displacment;
+glm::vec2 juliaPoint;
+float maxIter;
+
+Quad SquareFract;
+
+Shader shader0;
+Shader shaderJulia;
+Shader shaderMandel;
+
+Texture tex;
+
+FrameBuffer frameBuffer;
+
+Screen screen0;
+Screen screen1;
+
+int scr_width0;
+int scr_height0;
+
+/*                                */
+
+#pragma endregion
+
 void engine::ProcessBegin()
 {
 
-    shader0.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicFragmentShader.glsl").string());
     shaderMandel.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicMandelFragmentShader.glsl").string());
     shaderJulia.setFragmentShader(std::filesystem::current_path().append("src\\shaders\\basicJuliaFragmentShader.glsl").string());
-    shader0.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
+
     shaderMandel.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
     shaderJulia.setVertexShader(std::filesystem::current_path().append("src\\shaders\\basicVertexShader.glsl").string());
-    shader0.compile();
+
     shaderMandel.compile();
     shaderJulia.compile();
 
-    SquareScreen1 = Quad(q1v1, q1v2, q1v3, q1v4, 1.0f, 1.0f);
-    SquareScreen2 = Quad(q2v1, q2v2, q2v3, q2v4, 1.0f, 1.0f);
-    SquareFract1 = Quad(f1, f2, f3, f4, 1.0f, 1.0f);
-    SquareFract2 = Quad(f1, f2, f3, f4, 1.0f, 1.0f);
+    SquareFract = Quad(f1, f2, f3, f4, 1.0f, 1.0f);
 
     renderSize = glm::vec2(800.0f,800.0f);
     displacment = glm::vec2(0.5f, 0.5f);
@@ -196,11 +205,9 @@ void engine::ProcessBegin()
     juliaPoint = glm::vec2(0.0f, 0.0f);
     maxIter = 10.0f;
 
-    frameBuffer.Generate();
-    frameBuffer.Bind();
     tex.genTexture(renderSize.x, renderSize.y);
-    frameBuffer.AttachTexture(tex.getID());
-    frameBuffer.UnBind();
+    screen0 = Screen(tex, q1v1, q1v2, q1v3, q1v4, 1.0f, 1.0f, renderSize, windowSize);
+    screen1 = Screen(tex, q2v1, q2v2, q2v3, q2v4, 1.0f, 1.0f, renderSize, windowSize);
 
 }
 
@@ -210,52 +217,86 @@ void engine::ProcessInput()
     if(glfwGetKey(window, GLFW_KEY_KP_8) == GLFW_PRESS)
     {
 
-        renderSize = (  renderSize.x >= windowSize.x + 5.0f || renderSize.y >= windowSize.y + 5.0f) ? (glm::vec2)windowSize : renderSize + 5.0f ;
+        if(windowSize.x > windowSize.y)
+        {
+
+            renderSize.x = (renderSize.x/windowSize.x >= 1.0f) ? renderSize.x : renderSize.x + 1.0f;
+            renderSize.y = (renderSize.x/windowSize.x >= 1.0f) ? renderSize.y : renderSize.y + 1.0f;
+
+        }
+        else
+        {
+
+            renderSize.x = (renderSize.y/windowSize.y >= 1.0f) ? renderSize.x : renderSize.x + 1.0f;
+            renderSize.y = (renderSize.y/windowSize.y >= 1.0f) ? renderSize.y : renderSize.y + 1.0f;
+
+        }
+
+        console.Log(renderSize.x);
+        console.Log(renderSize.y);
+
+        hasUpdated = true;
 
     }
     else if(glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS)
     {
 
-        renderSize = (  renderSize.x <= 21.0f|| renderSize.y <= 21.0f) ? glm::vec2(16.0f) : renderSize - 5.0f;
+        renderSize.x = (renderSize.x <= 5.0f) ? 10.0f : renderSize.x - 5.0f;
+        renderSize.y = (renderSize.y <= 5.0f) ? 10.0f : renderSize.y - 5.0f;
+    
+        hasUpdated = true;
 
     }
 
     if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
     {
 
-        displacment.y = displacment.y + 0.01f;
+        displacment.y = displacment.y  + (0.1f/scale);
+
+        hasUpdated = true;
 
     }
     else if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     {
 
-        displacment.y = displacment.y - 0.01f;
+        displacment.y = displacment.y - (0.1f/scale);
+
+        hasUpdated = true;
 
     }
+
 
     if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
 
-        displacment.x = displacment.x + 0.01f;
+        displacment.x = displacment.x + (0.1f/scale);
+
+        hasUpdated = true;
 
     }
     else if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
     {
 
-        displacment.x = displacment.x - 0.01f;
+        displacment.x = displacment.x - (0.1f/scale);
+
+        hasUpdated = true;
 
     }
 
     if(glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
     {
 
-        scale = scale + 0.01f;
+        scale = scale * 1.1;
+
+        hasUpdated = true;
 
     }
     else if(glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
     {
 
-        scale = scale - 0.01f;
+        scale = scale / 1.1;
+
+        hasUpdated = true;
 
     }
 
@@ -264,11 +305,15 @@ void engine::ProcessInput()
 
         juliaPoint.y = juliaPoint.y + 0.01f;
 
+        hasUpdated = true;
+
     }
     else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
 
         juliaPoint.y = juliaPoint.y - 0.01f;
+
+        hasUpdated = true;
 
     }
 
@@ -277,11 +322,15 @@ void engine::ProcessInput()
 
         juliaPoint.x = juliaPoint.x + 0.01f;
 
+        hasUpdated = true;
+
     }
     else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
 
         juliaPoint.x = juliaPoint.x - 0.01f;
+
+        hasUpdated = true;
 
     }
 
@@ -290,11 +339,15 @@ void engine::ProcessInput()
 
         maxIter = maxIter + 10.0f;
 
+        hasUpdated = true;
+
     }
     else if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
     {
 
         maxIter = maxIter - 10.0f;
+
+        hasUpdated = true;
 
     }
 
@@ -303,72 +356,80 @@ void engine::ProcessInput()
 void engine::ProcessUpdate()
 {
 
+    if(hasUpdated || SCR_HEIGHT != scr_height0 || SCR_WIDTH != scr_width0)
+    {
 
+        hasUpdated = true;
+        console.Log("updated");
+
+    }
+
+    scr_height0 = SCR_HEIGHT;
+    scr_width0 = SCR_WIDTH;
 
 }
 
 void engine::ProcessDraw()
 {
 
-    SquareScreen1.Clear();
-    SquareScreen2.Clear();
-    if(windowSize.x >= windowSize.y)
+    float renderScale;
+    if(windowSize.x > windowSize.y)
     {
 
-        SquareScreen1 = Quad(q1v1, q1v2, glm::vec3(1.0f - (windowSize.x / windowSize.y), 0.0f, 0.0f), glm::vec3(1.0f - (windowSize.x / windowSize.y), 1.0f, 0.0f), renderSize.x/windowSize.x, renderSize.y/windowSize.y);
-        SquareScreen2 = Quad(SquareScreen1.a + glm::vec3(1.0f, 0.0f, 0.0f), SquareScreen1.b  + glm::vec3(1.0f, 0.0f, 0.0f), SquareScreen1.c  + glm::vec3(1.0f, 0.0f, 0.0f), SquareScreen1.d  + glm::vec3(1.0f, 0.0f, 0.0f), renderSize.x/windowSize.x, renderSize.y/windowSize.y);
+        renderScale = (renderSize.x/windowSize.x >= 1.0f) ? 1.0f : renderSize.x/windowSize.x;
+
+    }
+    else
+    {
+
+        renderScale = (renderSize.y/windowSize.y >= 1.0f) ? 1.0f : renderSize.y/windowSize.y;
 
     }
 
-    frameBuffer.Bind();
-    tex.updateTexture(renderSize.x, renderSize.y);
-    frameBuffer.AttachTexture(tex.getID());
+    glm::vec3 scale_offset = glm::vec3(0.0f, 1.0f - (float)(windowSize.x)/(windowSize.y), 0.0f);
+    glm::vec3 offset = glm::vec3(1.0f, 0.0f, 0.0f);
 
-    glViewport(0, 0, renderSize.x, renderSize.y);
+    if(hasUpdated)
+    {
+        screen0.Update(q1v1, q1v2 + scale_offset, q1v3 + scale_offset, q1v4, renderScale, renderScale, renderSize, windowSize);
+        screen1.Update(screen0.v1 + offset, screen0.v2 + offset, screen0.v3 + offset, screen0.v4 + offset, renderScale, renderScale, renderSize, windowSize);
+    
 
-    shaderJulia.use();
-    shaderJulia.setVec2("screenSize", renderSize);
-    shaderJulia.setFloat("scale", scale);
-    shaderJulia.setVec2("displacment", displacment);
-    shaderJulia.setVec2("juliaPoint", juliaPoint);
-    shaderJulia.setFloat("MAX_ITERS", maxIter);
-    SquareFract1.Draw();
+        screen1.Bind();
 
-    frameBuffer.UnBind();
-    glViewport(0, 0, windowSize.x, windowSize.y);
-    shader0.use();
-    shader0.setInt("texture0", 0);
-    SquareScreen1.Draw();
+        shaderMandel.use();    
+        shaderMandel.setVec2("screenSize", renderSize);
+        shaderMandel.setFloat("scale", scale);
+        shaderMandel.setVec2("displacment", displacment);
+        shaderJulia.setVec2("juliaPoint", juliaPoint);
+        shaderMandel.setFloat("MAX_ITERS", maxIter);
+        SquareFract.Draw();  
 
-    frameBuffer.Bind();
-    glViewport(0, 0, renderSize.x, renderSize.y);
+        screen1.UnBind();
+        screen1.Draw();
 
-    tex.updateTexture(renderSize.x, renderSize.y);
-    frameBuffer.AttachTexture(tex.getID());
+        screen0.Bind();
 
-    shaderMandel.use();
-    shaderMandel.setVec2("screenSize", renderSize);
-    shaderMandel.setFloat("scale", scale);
-    shaderMandel.setVec2("displacment", displacment);
-    shaderJulia.setVec2("juliaPoint", juliaPoint);
-    shaderMandel.setFloat("MAX_ITERS", maxIter);
-    SquareFract2.Draw();  
+        shaderJulia.use();
+        shaderJulia.setVec2("screenSize", renderSize);
+        shaderJulia.setFloat("scale", scale);
+        shaderJulia.setVec2("displacment", displacment);
+        shaderJulia.setVec2("juliaPoint", juliaPoint);
+        shaderJulia.setFloat("MAX_ITERS", maxIter);
+        SquareFract.Draw();
 
-    frameBuffer.UnBind();
-    glViewport(0, 0, windowSize.x, windowSize.y);
-    shader0.use();
-    shader0.setInt("texture0", 0);
-    SquareScreen2.Draw();
+        screen0.UnBind();
+        screen0.Draw();
+
+        hasUpdated = false;
+        glfwSwapBuffers(window);
+    }
 
 }
 
 void engine::ProcessEnd()
 {
 
-    tex.freeTexture();
-    SquareFract1.Clear();
-    SquareFract2.Clear();
-    SquareScreen1.Clear();
-    SquareScreen2.Clear();
+    SquareFract.Clear();
 
 }
