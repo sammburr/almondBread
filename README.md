@@ -15,3 +15,12 @@ Run the ```run_app.bat``` file in the parent directory.
 Run the following commands:
 - ```cd {path to repo}\almondBread```
 - ```.\builds\windows\main.exe```
+
+
+## Controls 
+
+**w,a,s,d** : move julia set point.
+**arrow keys** : translate graph.
+**+, -** : zoom graph
+**numpad 8** : increase resolution
+**numpad 2** : decrease resolution
