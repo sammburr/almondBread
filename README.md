@@ -19,8 +19,8 @@ Run the following commands:
 
 ## Controls 
 
-**w,a,s,d** : move julia set point.
-**arrow keys** : translate graph.
-**+, -** : zoom graph
-**numpad 8** : increase resolution
-**numpad 2** : decrease resolution
+- **w,a,s,d** : move julia set point.
+- **arrow keys** : translate graph.
+- **+, -** : zoom graph
+- **numpad 8** : increase resolution
+- **numpad 2** : decrease resolution
