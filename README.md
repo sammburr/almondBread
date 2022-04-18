@@ -6,4 +6,12 @@
 *2021-22 A-Level Computer Science Project.*
 
 
-## Examples
+## Running
+
+Run the ```run_app.bat``` file in the parent directory.
+
+*Alterantive:*
+
+Run the following commands:
+- ```cd {path to repo}\almondBread```
+- ```.\builds\windows\main.exe```
